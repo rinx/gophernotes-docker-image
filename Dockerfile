@@ -34,11 +34,14 @@ USER $NB_UID
 
 ENV PATH=$PATH:$GOPATH/bin:$GOROOT/bin
 
-RUN env GO111MODULE=off go get -d -u github.com/gopherdata/gophernotes
+RUN env GO111MODULE=off \
+    go get -d -u \
+    github.com/gopherdata/gophernotes
 
 WORKDIR $GOPATH/src/github.com/gopherdata/gophernotes
 
-RUN env GO111MODULE=on go install
+RUN env GO111MODULE=on \
+    go install
 
 RUN mkdir -p $HOME/.local/share/jupyter/kernels/gophernotes \
     && cp $GOPATH/src/github.com/gopherdata/gophernotes/kernel/* $HOME/.local/share/jupyter/kernels/gophernotes
