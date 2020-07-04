@@ -1,0 +1,26 @@
+name: Build docker image
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/docker.yml
+      - Dockerfile
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build the Docker image
+      run: |
+        docker build -t rinx/gophernotes .
+    - name: login to DockerHub
+      run: |
+        echo ${DOCKERHUB_PASS} | docker login --username ${DOCKERHUB_USER} --password-stdin
+      env:
+        DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+        DOCKERHUB_PASS: ${{ secrets.DOCKERHUB_PASS }}
+    - name: tag and push to DockerHub
+      run: |
+        docker push rinx/gophernotes:latest
